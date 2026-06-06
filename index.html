@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spotify Code → Sign Numbers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a; --panel:#121212; --panel2:#181818;
+    --green:#1ed760; --green-dim:#1db954; --ink:#f3f3f3; --muted:#8c8c8c;
+    --line:#262626; --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      radial-gradient(1100px 600px at 78% -8%, rgba(30,215,96,.14), transparent 60%),
+      radial-gradient(800px 500px at 8% 108%, rgba(30,215,96,.08), transparent 55%),
+      var(--bg);
+    color:var(--ink); font-family:"Manrope",system-ui,sans-serif;
+    min-height:100vh; line-height:1.5; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:48px 22px 80px}
+  .eq{display:flex; gap:5px; align-items:flex-end; height:34px; margin-bottom:22px}
+  .eq i{width:6px; background:var(--green); border-radius:4px; opacity:.9;
+        animation:bounce 1.1s ease-in-out infinite}
+  .eq i:nth-child(1){height:40%;animation-delay:0s}
+  .eq i:nth-child(2){height:90%;animation-delay:.12s}
+  .eq i:nth-child(3){height:55%;animation-delay:.24s}
+  .eq i:nth-child(4){height:100%;animation-delay:.36s}
+  .eq i:nth-child(5){height:30%;animation-delay:.48s}
+  .eq i:nth-child(6){height:75%;animation-delay:.6s}
+  .eq i:nth-child(7){height:50%;animation-delay:.72s}
+  @keyframes bounce{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1)}}
+  @media (prefers-reduced-motion:reduce){.eq i{animation:none}}
+
+  h1{font-family:"Bricolage Grotesque",sans-serif; font-weight:800;
+     font-size:clamp(30px,6vw,52px); line-height:1.02; letter-spacing:-.02em; margin:0 0 10px}
+  h1 span{color:var(--green)}
+  .lede{color:var(--muted); max-width:54ch; margin:0 0 30px; font-size:16px}
+
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));
+        border:1px solid var(--line); border-radius:var(--radius);
+        padding:22px; box-shadow:0 24px 60px -32px rgba(0,0,0,.9)}
+  label{display:block; font-weight:600; font-size:13px; letter-spacing:.04em;
+        text-transform:uppercase; color:var(--muted); margin:0 0 8px}
+  .row{display:flex; gap:10px; flex-wrap:wrap}
+  input[type=text]{flex:1 1 320px; min-width:0; background:#0d0d0d; color:var(--ink);
+    border:1px solid var(--line); border-radius:12px; padding:14px 16px;
+    font-family:"Manrope",sans-serif; font-size:15px; outline:none; transition:border-color .15s,box-shadow .15s}
+  input[type=text]:focus{border-color:var(--green-dim); box-shadow:0 0 0 3px rgba(30,215,96,.18)}
+  button.go{background:var(--green); color:#06150b; border:0; border-radius:999px;
+    padding:14px 26px; font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:15px;
+    cursor:pointer; transition:transform .12s, filter .15s; white-space:nowrap}
+  button.go:hover{filter:brightness(1.08); transform:translateY(-1px)}
+  button.go:active{transform:translateY(0)}
+  button.go:disabled{opacity:.5; cursor:default; transform:none}
+  .hint{color:var(--muted); font-size:13px; margin-top:10px}
+  .hint code{color:#cfcfcf; background:#0d0d0d; padding:1px 6px; border-radius:6px; border:1px solid var(--line)}
+
+  .result{margin-top:26px; display:none; animation:rise .4s ease both}
+  .result.show{display:block}
+  @keyframes rise{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:none}}
+  .track{display:flex; align-items:center; gap:14px; margin-bottom:18px}
+  .track img{width:60px; height:60px; border-radius:10px; object-fit:cover; background:#222}
+  .track .t{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:18px}
+  .track .s{color:var(--muted); font-size:13px}
+
+  .preview{background:#000; border:1px solid var(--line); border-radius:14px;
+    padding:18px; display:flex; justify-content:center; margin-bottom:18px}
+  .preview svg{width:100%; max-width:420px; height:auto}
+
+  .out-label{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px}
+  .digits{font-family:"JetBrains Mono",monospace; font-weight:700; font-size:clamp(20px,5vw,30px);
+    color:var(--green); background:#0d0d0d; border:1px dashed #2c4a35; border-radius:12px;
+    padding:16px 18px; letter-spacing:.14em; word-break:break-all; text-align:center}
+  button.copy{background:transparent; color:var(--green); border:1px solid var(--green-dim);
+    border-radius:999px; padding:7px 16px; font-family:"Manrope",sans-serif; font-weight:600; font-size:13px; cursor:pointer}
+  button.copy:hover{background:rgba(30,215,96,.12)}
+  .steps{margin-top:18px; background:#0d0d0d; border:1px solid var(--line); border-radius:12px; padding:16px 18px}
+  .steps b{color:var(--ink)}
+  .steps ol{margin:8px 0 0; padding-left:20px; color:var(--muted); font-size:14px}
+  .steps code{color:var(--green); background:#101010; padding:1px 6px; border-radius:6px}
+  .err{display:none; margin-top:16px; color:#ff6b6b; background:rgba(255,107,107,.08);
+    border:1px solid rgba(255,107,107,.3); border-radius:12px; padding:12px 14px; font-size:14px}
+  .err.show{display:block}
+  footer{color:#555; font-size:12px; margin-top:40px; text-align:center}
+  footer a{color:#777}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <h1>Get your <span>Spotify code</span> numbers</h1>
+  <p class="lede">Paste a Spotify song, album, playlist or artist link. You'll get the 23 digits to drop into the 3D model so the bars scan to your music.</p>
+
+  <div class="card">
+    <label for="link">Spotify link or URI</label>
+    <div class="row">
+      <input id="link" type="text" placeholder="https://open.spotify.com/track/…  or  spotify:track:…"
+             autocomplete="off" spellcheck="false">
+      <button class="go" id="go">Get numbers</button>
+    </div>
+    <p class="hint">Get the link in the Spotify app: <code>•••</code> → <b>Share</b> → <b>Copy link</b>.</p>
+    <div class="err" id="err"></div>
+
+    <div class="result" id="result">
+      <div class="track" id="track" style="display:none">
+        <img id="thumb" alt="">
+        <div><div class="t" id="title"></div><div class="s" id="subtitle"></div></div>
+      </div>
+      <div class="preview"><div id="svgbox"></div></div>
+
+      <div class="out-label">
+        <label style="margin:0">Paste this into <code style="text-transform:none">code_part1</code></label>
+        <button class="copy" id="copy">Copy</button>
+      </div>
+      <div class="digits" id="digits"></div>
+
+      <div class="steps">
+        <b>In the model (OpenSCAD / MakerWorld Customizer):</b>
+        <ol>
+          <li>Set <code>code_part1</code> to the digits above.</li>
+          <li>Leave <code>code_part2</code> empty and keep <code>digit_max = 7</code>.</li>
+          <li>Generate — the bars now match your track.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Uses Spotify's public Scannables service. Spotify Codes are scanned in the Spotify app
+    (Search → camera icon). Not affiliated with Spotify.
+  </footer>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const linkEl=$("link"), goEl=$("go"), errEl=$("err"), resEl=$("result");
+
+function showErr(m){ errEl.textContent=m; errEl.classList.add("show"); resEl.classList.remove("show"); }
+function clearErr(){ errEl.classList.remove("show"); }
+
+// Extract spotify:type:id from any link or URI
+function toUri(input){
+  const s=input.trim();
+  let m=s.match(/spotify:(track|album|playlist|artist|episode|show):([A-Za-z0-9]+)/i);
+  if(m) return `spotify:${m[1].toLowerCase()}:${m[2]}`;
+  m=s.match(/open\.spotify\.com\/(?:intl-[a-z]{2}\/)?(track|album|playlist|artist|episode|show)\/([A-Za-z0-9]+)/i);
+  if(m) return `spotify:${m[1].toLowerCase()}:${m[2]}`;
+  return null;
+}
+
+// Parse the 23 bar levels (0-7) from the Scannables SVG
+function levelsFromSvg(svgText){
+  const tags = svgText.match(/<rect[^>]*>/g) || [];
+  const bars = [];
+  for(const t of tags){
+    if(!/\brx=/.test(t)) continue;               // the bars have rounded corners
+    const hx = t.match(/\bheight="([0-9.]+)"/);
+    const xx = t.match(/\bx="([0-9.]+)"/);
+    if(hx && xx) bars.push({x:parseFloat(xx[1]), h:parseFloat(hx[1])});
+  }
+  bars.sort((a,b)=>a.x-b.x);
+  return bars.map(b => Math.max(0, Math.min(7, Math.round((b.h-11)/7))));
+}
+
+async function run(){
+  clearErr();
+  const uri = toUri(linkEl.value);
+  if(!uri){ showErr("That doesn't look like a Spotify link. Use Share → Copy link."); return; }
+
+  goEl.disabled=true; const old=goEl.textContent; goEl.textContent="Reading…";
+  try{
+    const svgUrl = `https://scannables.scdn.co/uri/plain/svg/000000/white/640/${uri}`;
+    const r = await fetch(svgUrl);
+    if(!r.ok) throw new Error("Spotify could not generate a code for that link.");
+    let svg = await r.text();
+
+    const levels = levelsFromSvg(svg);
+    if(levels.length < 20){ throw new Error("Couldn't read the code bars. Try a different link."); }
+
+    // recolor preview to match the product (green on black)
+    const greenSvg = svg.replace(/fill="#?ffffff"/gi, 'fill="#1ed760"')
+                        .replace(/fill="#?000000"/gi, 'fill="#000000"');
+    $("svgbox").innerHTML = greenSvg;
+
+    $("digits").textContent = levels.join("");
+
+    // optional: song title via oEmbed
+    $("track").style.display="none";
+    try{
+      const o = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(linkEl.value.trim())}`);
+      if(o.ok){
+        const j = await o.json();
+        $("title").textContent = j.title || "";
+        $("subtitle").textContent = (j.provider_name || "Spotify");
+        if(j.thumbnail_url) $("thumb").src=j.thumbnail_url;
+        $("track").style.display="flex";
+      }
+    }catch(_){}
+
+    resEl.classList.add("show");
+  }catch(e){
+    showErr(e.message || "Something went wrong. Try again.");
+  }finally{
+    goEl.disabled=false; goEl.textContent=old;
+  }
+}
+
+goEl.addEventListener("click", run);
+linkEl.addEventListener("keydown", e => { if(e.key==="Enter") run(); });
+
+$("copy").addEventListener("click", async ()=>{
+  try{ await navigator.clipboard.writeText($("digits").textContent);
+       const b=$("copy"); b.textContent="Copied!"; setTimeout(()=>b.textContent="Copy",1400);
+  }catch(_){ }
+});
+</script>
+</body>
+</html>
